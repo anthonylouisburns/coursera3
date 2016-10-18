@@ -18,6 +18,7 @@ class ParallelCountChangeSuite extends FunSuite {
         s"countChang($money, _) should be 0")
 
     check(-1, List())
+
     check(-1, List(1, 2, 3))
     check(-Int.MinValue, List())
     check(-Int.MinValue, List(1, 2, 3))

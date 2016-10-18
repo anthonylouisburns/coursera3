@@ -45,8 +45,23 @@ object ParallelCountChange {
   /** Returns the number of ways change can be made from the specified list of
    *  coins for the specified amount of money.
    */
-  def countChange(money: Int, coins: List[Int]): Int = {
-    ???
+  def countChange(money: Int, coins: List[Int]): Int = coins match {
+    case h :: t => {
+      if (money == 0){
+        return 1
+      } else if (money < h){
+        return 0
+      }else {
+        return countChange(money - h, h :: t) + countChange(money, t)
+      }
+    }
+    case Nil => {
+      if (money == 0){
+        return 1
+      } else {
+        return 0
+      }
+    }
   }
 
   type Threshold = (Int, List[Int]) => Boolean
@@ -54,21 +69,42 @@ object ParallelCountChange {
   /** In parallel, counts the number of ways change can be made from the
    *  specified list of coins for the specified amount of money.
    */
-  def parCountChange(money: Int, coins: List[Int], threshold: Threshold): Int = {
-    ???
+  def parCountChange(money: Int, coins: List[Int], threshold: Threshold): Int = coins match {
+    case h :: t => {
+      if (money == 0){
+        return 1
+      } else if (money < h){
+        return 0
+      }else {
+        if(threshold(money, h::t)) countChange(money, h::t)
+        else {
+          val p = parallel(countChange(money - h, h :: t), countChange(money, t))
+          p._1 + p._2
+        }
+      }
+    }
+    case Nil => {
+      if (money == 0){
+        return 1
+      } else {
+        return 0
+      }
+    }
   }
 
   /** Threshold heuristic based on the starting money. */
-  def moneyThreshold(startingMoney: Int): Threshold =
-    ???
+  def moneyThreshold(startingMoney: Int): Threshold = {
+    (m, c) => m <= (2*startingMoney)/3
+  }
 
   /** Threshold heuristic based on the total number of initial coins. */
-  def totalCoinsThreshold(totalCoins: Int): Threshold =
-    ???
+  def totalCoinsThreshold(totalCoins: Int): Threshold ={
+    (m, c) => c.size <= (2*totalCoins)/3
+  }
 
 
   /** Threshold heuristic based on the starting money and the initial list of coins. */
   def combinedThreshold(startingMoney: Int, allCoins: List[Int]): Threshold = {
-    ???
+    (m, c) => m*c.size <= (startingMoney*allCoins.size)/2
   }
 }
