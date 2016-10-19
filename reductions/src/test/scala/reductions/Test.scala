@@ -6,12 +6,17 @@ import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import common._
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory
 
-import ParallelCountChange._
 
 @RunWith(classOf[JUnitRunner])
 class Test extends FunSuite {
-  println(countChange(0,(List())))
-  println(countChange(0,(List(1, 2, 3))))
-  println(countChange(0,(List.range(1, 100))))
+  import LineOfSight._
+  test("lineOfSight should correctly handle an array of size 4") {
+    val output = new Array[Float](4)
+    val input = Array[Float](0f, 7f, 8f, 9f)
+    downsweep(input, output, 0, Leaf(0, 4, 0))
+    println(output.toList)
+  }
+
 }
