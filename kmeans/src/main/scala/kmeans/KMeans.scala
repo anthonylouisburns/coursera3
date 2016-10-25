@@ -43,7 +43,11 @@ class KMeans {
   }
 
   def classify(points: GenSeq[Point], means: GenSeq[Point]): GenMap[Point, GenSeq[Point]] = {
-    ???
+    var m = points.groupBy(findClosest(_,means))
+    means.foreach(p=>
+      if(!m.contains(p)) m = m.updated(p, GenSeq())
+    )
+    m
   }
 
   def findAverage(oldMean: Point, points: GenSeq[Point]): Point = if (points.length == 0) oldMean else {
